@@ -1,0 +1,104 @@
+#include<stdio.h>
+#include<stdlib.h>
+#include <pthread.h>
+#include<time.h>
+#include<conio.h>
+
+int valores[100];
+
+
+void *funcao(void *arg){
+
+printf("Thread 1 executando....\n");
+FILE *arquivo;
+arquivo = fopen("Nomes.txt","w+");
+char *kb = "Kobe";
+char *ln = "Lebron";
+char *sn = "Curry";
+char *mj = "Jordan";
+char *jh = "Harden";
+char *ad = "Anthony";
+
+    fprintf(arquivo,kb);
+    fprintf(arquivo,"\n");
+    fprintf(arquivo,ln);
+    fprintf(arquivo,"\n");
+    fprintf(arquivo,sn);
+    fprintf(arquivo,"\n");
+    fprintf(arquivo,mj);
+    fprintf(arquivo,"\n");
+    fprintf(arquivo,jh);
+    fprintf(arquivo,"\n");
+    fprintf(arquivo,ad);
+    fprintf(arquivo,"\n");
+printf("Thread 1 executada \n");
+fclose(arquivo);
+}
+
+void *funcao2(void *arg){
+printf("Thread 2 executando....\n");
+int i=0;
+int aux;
+FILE *arquivo;
+arquivo = fopen("Numeros.txt","w+");
+            for (i;i<100;i++){
+                valores[i] = rand()%3515;
+                fprintf(arquivo,"%d",valores[i]);
+                fprintf(arquivo,"\n");
+
+}
+
+printf("Thread 2 executada\n");
+
+fclose(arquivo);
+}
+
+void *funcao3(){
+printf("Thread 3 executando....\n");
+int i,j,aux=0;
+FILE *arquivo;
+arquivo = fopen("NumerosOrdenados.txt","w+");
+            for (i;i<100;i++){
+                valores[i] = rand()%3515;
+}
+    for (i;i<100;i++){
+        for(j;j<100;j++){
+            if(valores[i]<valores[j]){
+            aux = valores[j];
+            valores[j] = valores[i];
+            valores[i] = aux;
+
+
+        }
+
+    }
+
+
+}
+    for(i;i<100;i++){
+        fprintf(arquivo,"%d",valores[i]);
+
+
+}
+printf("Thread 3 executada\n");
+
+fclose(arquivo);
+}
+
+int main(){
+
+   pthread_t threads[4];
+   int i =0;
+
+    pthread_create(&threads[1],NULL,funcao, NULL);
+    pthread_create(&threads[2],NULL,funcao2,NULL);
+    pthread_create(&threads[3],NULL,funcao3,NULL);
+
+
+   for(i;i<3;i++){
+    pthread_join(threads[i],NULL);
+
+
+   }
+return 0;
+}
